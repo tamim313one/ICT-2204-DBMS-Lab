@@ -1,0 +1,36 @@
+mysql> CREATE DATABASE IIT14THBATCH;
+Query OK, 1 row affected (0.05 sec)
+
+mysql> 
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| iit14thbatch       |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.04 sec)
+
+mysql> USE IIT14THBATCH;
+Database changed
+mysql> CREATE TABLE STUDENT(
+    -> STUDENTID INT,
+    -> STUDENTNAME VARCHAR(50),
+    -> SESSION VARCHAR(20),
+    -> GENDER VARCHAR(20),
+    -> MOBILEPHONE VARCHAR(20),
+    -> EMAIL VARCHAR(30),
+    -> DATEOFBIRTH DATE);
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> SHOW TABLES;
++------------------------+
+| Tables_in_iit14thbatch |
++------------------------+
+| student                |
++------------------------+
+1 row in set (0.01 sec)
+
