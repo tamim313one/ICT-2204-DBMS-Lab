@@ -1,0 +1,384 @@
+mysql> USE IIT;
+Database changed
+mysql> CREATE TABLE STUDENT(ID INT, NAME VARCHAR(20));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> ALTER TABLE ADD STUDENTCODE VARCHAR(20);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ADD STUDENTCODE VARCHAR(20)' at line 1
+mysql> ALTER TABLE STUDENT ADD STUDENTCODE VARCHAR(20);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM STUDENT;
+Empty set (0.00 sec)
+
+mysql> INSERT INTO STUDENT(ID,NAME,STUDENTCODE) VALUES(101,'A','1101'),(102,'B','2101');
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM STUDENT;
++------+------+-------------+
+| ID   | NAME | STUDENTCODE |
++------+------+-------------+
+|  101 | A    | 1101        |
+|  102 | B    | 2101        |
++------+------+-------------+
+2 rows in set (0.00 sec)
+
+mysql> UPDATE STUDENT SET STUDENTCODE=2102 WHERE ID=101;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM STUDENT;
++------+------+-------------+
+| ID   | NAME | STUDENTCODE |
++------+------+-------------+
+|  101 | A    | 2102        |
+|  102 | B    | 2101        |
++------+------+-------------+
+2 rows in set (0.00 sec)
+
+mysql> ALTER TABLE STUDENT DROP COLUMN STUDENTCODE;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM STUDENT;
++------+------+
+| ID   | NAME |
++------+------+
+|  101 | A    |
+|  102 | B    |
++------+------+
+2 rows in set (0.00 sec)
+
+mysql> ALTER TABLE STUDENT ADD CONSTRAINT asd PRIMARY KEY(ID);
+Query OK, 0 rows affected (0.06 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE CLASSES(ID INT, CLASS INT, SECTION VARCHAR(5));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> DESC STUDENT;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| ID    | int         | NO   | PRI | NULL    |       |
+| NAME  | varchar(20) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> DESC CLASSES
+    -> ;
++---------+------------+------+-----+---------+-------+
+| Field   | Type       | Null | Key | Default | Extra |
++---------+------------+------+-----+---------+-------+
+| ID      | int        | YES  |     | NULL    |       |
+| CLASS   | int        | YES  |     | NULL    |       |
+| SECTION | varchar(5) | YES  |     | NULL    |       |
++---------+------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> ALTER TABLE CLASSES ADD CONSTRAINT nasd FOREIGN KEY(ID) REFERENCES STUDENT(ID);
+Query OK, 0 rows affected (0.06 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> DESC CLASSES;
++---------+------------+------+-----+---------+-------+
+| Field   | Type       | Null | Key | Default | Extra |
++---------+------------+------+-----+---------+-------+
+| ID      | int        | YES  | MUL | NULL    |       |
+| CLASS   | int        | YES  |     | NULL    |       |
+| SECTION | varchar(5) | YES  |     | NULL    |       |
++---------+------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT*FROM CLASSES;
+Empty set (0.00 sec)
+
+mysql> ALTER TABLE CLASSES ADD CONSTRAINT asd PRIMARY KEY(ID);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> DESC CLASSES;
++---------+------------+------+-----+---------+-------+
+| Field   | Type       | Null | Key | Default | Extra |
++---------+------------+------+-----+---------+-------+
+| ID      | int        | NO   | PRI | NULL    |       |
+| CLASS   | int        | YES  |     | NULL    |       |
+| SECTION | varchar(5) | YES  |     | NULL    |       |
++---------+------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> ALTER TABLE CLASSES ADD CONSTRAINT nasd FOREIGN KEY(ID) REFERENCES STUDENT(ID);
+ERROR 1826 (HY000): Duplicate foreign key constraint name 'nasd'
+mysql> ALTER TABLE CLASSES ADD CONSTRAINT nasE FOREIGN KEY(ID) REFERENCES STUDENT(ID);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> DESC CLASSES;
++---------+------------+------+-----+---------+-------+
+| Field   | Type       | Null | Key | Default | Extra |
++---------+------------+------+-----+---------+-------+
+| ID      | int        | NO   | PRI | NULL    |       |
+| CLASS   | int        | YES  |     | NULL    |       |
+| SECTION | varchar(5) | YES  |     | NULL    |       |
++---------+------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO CLASSES(ID,CLASS,SECTION) VALUES(101,9,'A'),(102,10,'A');
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO STUDENT(ID,NAME) VALUES(103,'C');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO CLASSES(ID,CLASS,SECTION) VALUES(103,9,'C');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO CLASSES(ID,CLASS,SECTION) VALUES(104,9,'A');
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`iit`.`classes`, CONSTRAINT `nasE` FOREIGN KEY (`ID`) REFERENCES `student` (`ID`))
+mysql> SELECT*FROM CLASSES;
++-----+-------+---------+
+| ID  | CLASS | SECTION |
++-----+-------+---------+
+| 101 |     9 | A       |
+| 102 |    10 | A       |
+| 103 |     9 | C       |
++-----+-------+---------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT*FROM STUDENT;
++-----+------+
+| ID  | NAME |
++-----+------+
+| 101 | A    |
+| 102 | B    |
+| 103 | C    |
++-----+------+
+3 rows in set (0.00 sec)
+
+mysql> CREATE TABLE TEST;
+ERROR 4028 (HY000): A table must have at least one visible column.
+mysql> CREATE TABLE TEST(ID,NAME);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',NAME)' at line 1
+mysql> CREATE TABLE TEST(ID INT,NAME VARCHAR(20));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> ALTER TABLE TEST DROP COLUMN ID;
+Query OK, 0 rows affected (0.06 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE TEST ADD COLUMN ID INT PRIMARY KEY;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO TEST(ID, NAME) VALUES(101,'A'),(102,'B');
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM COLUMN;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'COLUMN' at line 1
+mysql> SELECT * FROM TEST;
++------+-----+
+| NAME | ID  |
++------+-----+
+| A    | 101 |
+| B    | 102 |
++------+-----+
+2 rows in set (0.00 sec)
+
+mysql> DESC TEST;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| NAME  | varchar(20) | YES  |     | NULL    |       |
+| ID    | int         | NO   | PRI | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> ALTER TABLE TEST DROP COLUMN ID;
+Query OK, 2 rows affected (0.04 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE TEST ADD COLUMN ID INT, ADD CONSTRAINT pk_t PRIMARY KEY(ID);
+ERROR 1062 (23000): Duplicate entry '0' for key 'test.PRIMARY'
+mysql> UPDATE TEST SET ID=101 WHERE NAME='A';
+ERROR 1054 (42S22): Unknown column 'ID' in 'field list'
+mysql> DELETE FROM TEST WHERE NAME='A';
+Query OK, 1 row affected (0.00 sec)
+
+mysql> ALTER TABLE TEST ADD COLUMN ID INT, ADD CONSTRAINT pk_t PRIMARY KEY(ID);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT* FROM TEST;
++------+----+
+| NAME | ID |
++------+----+
+| B    |  0 |
++------+----+
+1 row in set (0.00 sec)
+
+mysql> ALTER TABLE TEST DROP COLUMN ID;
+Query OK, 1 row affected (0.04 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE TEST ADD COLUMN ID INT;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE TEST ADD CONSTRAINT pk_id_name PRIMARY KEY(ID,NAME);
+ERROR 1138 (22004): Invalid use of NULL value
+mysql> SELECT * FROM TEST;
++------+------+
+| NAME | ID   |
++------+------+
+| B    | NULL |
++------+------+
+1 row in set (0.00 sec)
+
+mysql> INSERT INTO TEST(ID) VALUES(1);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> ALTER TABLE TEST ADD CONSTRAINT pk_id_name PRIMARY KEY(ID,NAME);
+ERROR 1138 (22004): Invalid use of NULL value
+mysql> SELECT * FROM TEST;
++------+------+
+| NAME | ID   |
++------+------+
+| B    | NULL |
+| NULL |    1 |
++------+------+
+2 rows in set (0.00 sec)
+
+mysql> DELETE FROM TEST WHERE NAME='B';
+Query OK, 1 row affected (0.00 sec)
+
+mysql> UPDATE TEST SET NAME='A' WHERE ID=1;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> ALTER TABLE TEST ADD CONSTRAINT pk_id_name PRIMARY KEY(ID,NAME);
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> 
+mysql> SELECT * FROM TEST;
++------+----+
+| NAME | ID |
++------+----+
+| A    |  1 |
++------+----+
+1 row in set (0.00 sec)
+
+mysql> DESC TEST;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| NAME  | varchar(20) | NO   | PRI | NULL    |       |
+| ID    | int         | NO   | PRI | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> DESC CLASSES;
++---------+------------+------+-----+---------+-------+
+| Field   | Type       | Null | Key | Default | Extra |
++---------+------------+------+-----+---------+-------+
+| ID      | int        | NO   | PRI | NULL    |       |
+| CLASS   | int        | YES  |     | NULL    |       |
+| SECTION | varchar(5) | YES  |     | NULL    |       |
++---------+------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> DESC STUDENT;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| ID    | int         | NO   | PRI | NULL    |       |
+| NAME  | varchar(20) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT ID,CLASS,SECTION, NAME FROM STUDENT,CLASSES;
+ERROR 1052 (23000): Column 'ID' in field list is ambiguous
+mysql> SELECT ID,CLASS,SECTION, NAME FROM STUDENT AS S,CLASSES AS C;
+ERROR 1052 (23000): Column 'ID' in field list is ambiguous
+mysql> SELECT ID,CLASS,SECTION, NAME FROM STUDENT as s,CLASSES as c;
+ERROR 1052 (23000): Column 'ID' in field list is ambiguous
+mysql> SELECT ID,CLASS,SECTION, NAME FROM STUDENT as s, CLASSES as c;
+ERROR 1052 (23000): Column 'ID' in field list is ambiguous
+mysql> SELECT s.ID,CLASS,SECTION, NAME FROM STUDENT as s, CLASSES as c;
++-----+-------+---------+------+
+| ID  | CLASS | SECTION | NAME |
++-----+-------+---------+------+
+| 103 |     9 | A       | C    |
+| 102 |     9 | A       | B    |
+| 101 |     9 | A       | A    |
+| 103 |    10 | A       | C    |
+| 102 |    10 | A       | B    |
+| 101 |    10 | A       | A    |
+| 103 |     9 | C       | C    |
+| 102 |     9 | C       | B    |
+| 101 |     9 | C       | A    |
++-----+-------+---------+------+
+9 rows in set (0.00 sec)
+
+mysql> SELECT c.ID,CLASS,SECTION, NAME FROM STUDENT as s, CLASSES as c;
++-----+-------+---------+------+
+| ID  | CLASS | SECTION | NAME |
++-----+-------+---------+------+
+| 101 |     9 | A       | C    |
+| 101 |     9 | A       | B    |
+| 101 |     9 | A       | A    |
+| 102 |    10 | A       | C    |
+| 102 |    10 | A       | B    |
+| 102 |    10 | A       | A    |
+| 103 |     9 | C       | C    |
+| 103 |     9 | C       | B    |
+| 103 |     9 | C       | A    |
++-----+-------+---------+------+
+9 rows in set (0.00 sec)
+
+mysql> INSERT INTO STUDENT(ID) VALUES(104),(105),(106),(107);
+Query OK, 4 rows affected (0.00 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO CLASSES(ID) SELECT ID FROM STUDENT;
+ERROR 1062 (23000): Duplicate entry '101' for key 'classes.PRIMARY'
+mysql> TRUNCATE CLASSES;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> INSERT INTO CLASSES(ID) SELECT ID FROM STUDENT;
+Query OK, 7 rows affected (0.00 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM STUDENT;
++-----+------+
+| ID  | NAME |
++-----+------+
+| 101 | A    |
+| 102 | B    |
+| 103 | C    |
+| 104 | NULL |
+| 105 | NULL |
+| 106 | NULL |
+| 107 | NULL |
++-----+------+
+7 rows in set (0.00 sec)
+
+mysql> SELECT * FROM CLASSES;
++-----+-------+---------+
+| ID  | CLASS | SECTION |
++-----+-------+---------+
+| 101 |  NULL | NULL    |
+| 102 |  NULL | NULL    |
+| 103 |  NULL | NULL    |
+| 104 |  NULL | NULL    |
+| 105 |  NULL | NULL    |
+| 106 |  NULL | NULL    |
+| 107 |  NULL | NULL    |
++-----+-------+---------+
+7 rows in set (0.00 sec)
+
+mysql> NOTEE;
